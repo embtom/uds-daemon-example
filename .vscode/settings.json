@@ -1,0 +1,18 @@
+{
+    "cmake.useCMakePresets": "always",
+    "cmake.options.statusBarVisibility": "visible",
+    "cmake.sourceDirectory": "${workspaceFolder}/sockact",
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnEdit": false,
+    "cmake.loadCompileCommands": false,
+    "cmake.skipConfigureIfCachePresent": true,
+    "cmake.copyCompileCommands": "${workspaceFolder}/sockact/build/compile_commands.json",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/sockact/build/compile_commands.json",
+    "[markdown]": {
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
+    "cmakeFormat.args": [
+        "--config-file",
+        "${workspaceFolder}/cmake-format.yaml"
+    ]
+}

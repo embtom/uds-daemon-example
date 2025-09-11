@@ -1,0 +1,46 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "[debug] build mcu1_0",
+            "type": "shell",
+            "command": "${workspaceFolder}/krc5_mcu1_0/scripts/build_krc5_mcu1_0.sh",
+            "args": [
+                "--clean",
+                "--debug"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "target",
+            "type": "promptString",
+            "description": "Enter the target name / IP address",
+            "default": "172.16.0.1"
+        },
+        {
+            "id": "buildType",
+            "type": "pickString",
+            "description": "Select the build type",
+            "options": [
+                "Debug",
+                "Release"
+            ]
+        },
+        {
+            "id": "debianPackageVariant",
+            "type": "pickString",
+            "description": "Select the debian package variant",
+            "options": [
+                "mcufw",
+                "mcutool"
+            ]
+        }
+    ]
+}

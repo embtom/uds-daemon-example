@@ -1,0 +1,32 @@
+FROM debian:trixie
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
+RUN apt-get update \
+ && apt-get install --yes --no-install-recommends \
+    build-essential \
+    openssh-client \
+    gcc-aarch64-linux-gnu \
+    g++-aarch64-linux-gnu \
+    libc6-dev-arm64-cross \
+    cmake \
+    curl \
+    ninja-build \
+    gdb-multiarch \
+    git \
+    wget \
+    libsystemd-dev \
+    libspdlog-dev \
+    zsh \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir --break-system-packages cmake-format
+
+# Install oh-my-zsh unattended
+RUN ZSH="/root/.oh-my-zsh" RUNZSH=no CHSH=no \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+CMD ["/usr/bin/zsh"]

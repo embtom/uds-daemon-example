@@ -1,0 +1,104 @@
+{
+   "version": 6,
+   "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 16,
+      "patch": 0
+   },
+   "configurePresets": [
+      {
+         "name": "base",
+         "hidden": true,
+         "displayName": "Base Config",
+         "description": "Everything else should inherit from here",
+         "generator": "Ninja",
+         "binaryDir": "$env{BINARY_DIR}",
+         "environment": {
+            "BUILD_TYPE": "Release",
+            "BINARY_DIR": "${sourceDir}/build/$env{TOOLCHAIN}-$env{BUILD_TYPE}"
+         },
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "$env{BUILD_TYPE}",
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+         }
+      },
+      {
+         "name": "base-amd64-linux-gcc",
+         "hidden": true,
+         "environment": {
+            "TOOLCHAIN": "amd64-linux-user-gcc"
+         },
+         "inherits": "base",
+         "cacheVariables": {
+            "CMAKE_INSTALL_PREFIX": "$env{BINARY_DIR}/EXPORT"
+         }
+      },
+      {
+         "name": "base-aarch64-linux-gcc",
+         "hidden": true,
+         "environment": {
+            "TOOLCHAIN": "aarch64-linux-user-gcc"
+         },
+         "inherits": "base",
+         "toolchainFile": "${sourceDir}/cmake/aarch64-linux-gnu-gcc.cmake",
+         "cacheVariables": {
+            "CMAKE_INSTALL_PREFIX": "$env{BINARY_DIR}/EXPORT"
+         }
+      },
+      {
+         "name": "switch-debug",
+         "hidden": true,
+         "description": "Settings for a debug build",
+         "environment": {
+            "BUILD_TYPE": "Debug"
+         },
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug"
+         }
+      },
+      {
+         "name": "amd64-linux-user-gcc-Release",
+         "description": "Release build",
+         "inherits": "base-amd64-linux-gcc"
+      },
+      {
+         "name": "amd64-linux-user-gcc-Debug",
+         "description": "Release build",
+         "inherits": [
+            "switch-debug",
+            "base-amd64-linux-gcc"
+         ]
+      },
+      {
+         "name": "aarch64-linux-user-gcc-Release",
+         "description": "Release build",
+         "inherits": "base-aarch64-linux-gcc"
+      },
+      {
+         "name": "aarch64-linux-user-gcc-Debug",
+         "description": "Release build",
+         "inherits": [
+            "switch-debug",
+            "base-aarch64-linux-gcc"
+         ]
+      }
+   ],
+   "buildPresets": [
+      {
+         "name": "amd64-linux-user-gcc-Release",
+         "configurePreset": "amd64-linux-user-gcc-Release"
+      },
+      {
+         "name": "amd64-linux-user-gcc-Debug",
+         "configurePreset": "amd64-linux-user-gcc-Debug"
+      },
+      {
+         "name": "aarch64-linux-user-gcc-Release",
+         "configurePreset": "aarch64-linux-user-gcc-Release"
+      },
+      {
+         "name": "aarch64-linux-user-gcc-Debug",
+         "configurePreset": "aarch64-linux-user-gcc-Debug"
+      }
+   ]
+}

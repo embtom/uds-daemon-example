@@ -1,0 +1,41 @@
+{
+    "name": "sockact",
+    "build": {
+        "dockerfile": "Containerfile"
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached",
+    "workspaceFolder": "${localWorkspaceFolder}",
+    "containerEnv": {
+        "DEVCONTAINER": "1",
+        "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "davidanson.vscode-markdownlint",
+                "eamodio.gitlens",
+                "editorconfig.editorconfig",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cmake-tools",
+                "streetsidesoftware.code-spell-checker",
+                "yzhang.markdown-all-in-one",
+                "davidanson.vscode-markdownlint",
+                "sonarsource.sonarlint-vscode",
+                "mhutchie.git-graph",
+                "cheshirekow.cmake-format",
+                "foxundermoon.shell-format"
+            ],
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": null,
+                    "zsh": {
+                        "path": "/usr/bin/zsh"
+                    }
+                },
+                "editor.indentSize": 4,
+                "editor.tabSize": 4,
+                "editor.insertSpaces": false
+            }
+        }
+    }
+}
