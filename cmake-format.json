@@ -1,0 +1,9 @@
+{
+    "line_width": 100,
+    "tab_size": 4,
+    "max_pargs_hwrap": 2,
+    "max_subargs_per_line": 2,
+    "separate_ctrl_name_with_space": false,
+    "separate_fn_name_with_space": false,
+    "dangle_parens": false
+}

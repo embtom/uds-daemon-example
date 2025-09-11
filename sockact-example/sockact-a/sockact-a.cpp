@@ -2,5 +2,5 @@
 
 int main(int argc, const char** argv)
 {
-	spdlog::info("Hello");
+    spdlog::info("Hello");
 }

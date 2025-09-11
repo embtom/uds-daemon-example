@@ -1,0 +1,31 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{robot,resource}]
+indent_size = 4
+
+[*.yml]
+indent_size = 2
+
+[**/debian/control]
+indent_size = 1
+
+[**/debian/rules]
+indent_style = tab
+
+[Containerfile]
+indent_size = 2
+
+[makefile]
+indent_style = tab
+
+[{CMakeLists.txt,*.cmake}]
+indent_size = 2
+indent_style = space
+

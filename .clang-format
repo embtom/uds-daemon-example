@@ -1,5 +1,27 @@
-BasedOnStyle: Google
-IndentWidth: 3
-AllowShortFunctionsOnASingleLine: None
+BasedOnStyle: LLVM
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+AllowShortCaseLabelsOnASingleLine: true
+IndentWidth: 4
+AllowShortFunctionsOnASingleLine: false
 KeepEmptyLinesAtTheStartOfBlocks: false
-BreakBeforeBraces: Allman
+PointerAlignment: Left
+ColumnLimit: 100
+AlwaysBreakTemplateDeclarations: Yes
+AllowShortEnumsOnASingleLine: false
+AlignAfterOpenBracket: AlwaysBreak
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 1
+AllowAllArgumentsOnNextLine: true
+BinPackArguments: false

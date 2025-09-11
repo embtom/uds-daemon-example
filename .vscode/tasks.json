@@ -4,13 +4,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "[debug] build mcu1_0",
+            "label": "[amd64] debian package build",
             "type": "shell",
-            "command": "${workspaceFolder}/krc5_mcu1_0/scripts/build_krc5_mcu1_0.sh",
-            "args": [
-                "--clean",
-                "--debug"
-            ],
+            "options" : {
+                "cwd" : "${workspaceFolder}/sockact-example",
+            },
+            "command": "dpkg-buildpackage -us -uc -b ${input:debianPackageVariant}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -38,8 +37,8 @@
             "type": "pickString",
             "description": "Select the debian package variant",
             "options": [
-                "mcufw",
-                "mcutool"
+                "amd64",
+                "arm64"
             ]
         }
     ]

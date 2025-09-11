@@ -1,0 +1,84 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 16,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "base-amd64",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+            }
+        },
+        {
+            "name": "base-aarch64",
+            "hidden": true,
+            "inherits": "base",
+            "toolchainFile": "${sourceDir}/cmake/aarch64-linux-gnu-gcc.cmake",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/aarch64"
+            }
+        },
+        {
+            "name": "switch-debug",
+            "hidden": true,
+            "description": "Settings for a debug build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "amd64-Release",
+            "inherits": "base-amd64"
+        },
+        {
+            "name": "amd64-Debug",
+            "inherits": [
+                "switch-debug",
+                "base-amd64"
+            ]
+        },
+        {
+            "name": "arm64-Release",
+            "inherits": "base-aarch64"
+        },
+        {
+            "name": "arm64-Debug",
+            "inherits": [
+                "switch-debug",
+                "base-aarch64"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "amd64-Release",
+            "configurePreset": "amd64-Release"
+        },
+        {
+            "name": "amd64-Debug",
+            "configurePreset": "amd64-Debug"
+        },
+        {
+            "name": "arm64-Release",
+            "configurePreset": "arm64-Release"
+        },
+        {
+            "name": "arm64-Debug",
+            "configurePreset": "arm64-Debug"
+        }
+    ]
+}

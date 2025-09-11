@@ -34,7 +34,8 @@
                 },
                 "editor.indentSize": 4,
                 "editor.tabSize": 4,
-                "editor.insertSpaces": false
+                "editor.insertSpaces": false,
+                "terminal.integrated.defaultProfile.linux": "zsh"
             }
         }
     }

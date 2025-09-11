@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+ARCH ?= $(DEB_HOST_ARCH)
+
+ifeq ($(ARCH),amd64)
+  PRESET = amd64-Release
+else ifeq ($(ARCH),arm64)
+  PRESET = arm64-Release
+else
+  $(error Unsupported architecture: $(ARCH))
+endif
+
+BUILDDIR = build/$(PRESET)
+
+%:
+	dh $@ --buildsystem=cmake+ninja --builddirectory=$(BUILDDIR)
+
+override_dh_auto_configure:
+	dh_auto_configure --builddirectory=$(BUILDDIR) -- \
+	  --preset=$(PRESET)
+
+override_dh_auto_test:
+	@echo "#############################" 2>&1
+	@echo "# Tests are being skipped ! #" 2>&1
+	@echo "#############################" 2>&1

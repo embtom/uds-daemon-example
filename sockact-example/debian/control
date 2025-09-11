@@ -1,0 +1,20 @@
+Source: sockact-example
+Section: utils
+Priority: optional
+Maintainer: Your Name <you@example.com>
+Build-Depends: debhelper-compat (= 13),
+               cmake,
+               ninja-build,
+               g++-aarch64-linux-gnu,
+               pkg-config,
+               libspdlog-dev:arm64,
+               libsystemd-dev:arm64
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: sockact-example
+Architecture: amd64 arm64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Socket activation example with spdlog + systemd
+ A small example application demonstrating socket activation using systemd
+ and logging with spdlog.
