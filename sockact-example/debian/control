@@ -1,14 +1,15 @@
 Source: sockact-example
 Section: utils
 Priority: optional
-Maintainer: Your Name <you@example.com>
+Maintainer: tom <t.willetal@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                cmake,
                ninja-build,
-               g++-aarch64-linux-gnu,
                pkg-config,
-               libspdlog-dev:arm64,
-               libsystemd-dev:arm64
+               pkgconf,
+               libspdlog-dev,
+               libsystemd-dev
+Build-Depends-Arch: g++-aarch64-linux-gnu
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 

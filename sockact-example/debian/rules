@@ -17,9 +17,9 @@ BUILDDIR = build/$(PRESET)
 
 override_dh_auto_configure:
 	dh_auto_configure --builddirectory=$(BUILDDIR) -- \
-	  --preset=$(PRESET)
+	  --preset=$(PRESET) \
+	  -DCMAKE_INSTALL_PREFIX=/usr
 
 override_dh_auto_test:
-	@echo "#############################" 2>&1
-	@echo "# Tests are being skipped ! #" 2>&1
-	@echo "#############################" 2>&1
+	dh_auto_test
+
