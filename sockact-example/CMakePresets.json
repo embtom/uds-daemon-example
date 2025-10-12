@@ -13,24 +13,20 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
             }
         },
         {
             "name": "base-amd64",
             "hidden": true,
-            "inherits": "base",
-            "cacheVariables": {
-            }
+            "inherits": "base"
         },
         {
             "name": "base-aarch64",
             "hidden": true,
             "inherits": "base",
-            "toolchainFile": "${sourceDir}/cmake/aarch64-linux-gnu-gcc.cmake",
-            "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/aarch64"
-            }
+            "toolchainFile": "${sourceDir}/cmake/aarch64-linux-gnu-gcc.cmake"
         },
         {
             "name": "switch-debug",
