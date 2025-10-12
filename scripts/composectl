@@ -1,0 +1,71 @@
+#!/bin/bash
+set -euo pipefail
+
+COMPOSE_FILE="podman-compose.yml"
+SERVICES=(builder devcontainer)
+
+usage() {
+    cat <<EOF
+Usage: ${0##*/} COMMAND [SERVICE]
+
+Commands:
+  build [SERVICE]    Build all containers or a specific container.
+  remove [SERVICE]   Remove all built images or a specific image.
+  help               Show this help message.
+
+Examples:
+EOF
+for service in "${SERVICES[@]}"; do
+    echo "  ${0##*/} build or remove [$service]"
+done
+}
+
+valid_service() {
+    [[ " ${SERVICES[*]} " == *" $1 "* ]]
+}
+
+build_service() {
+    local service="$1"
+    echo "Building $service..."
+    podman-compose -f "$COMPOSE_FILE" build "$service"
+}
+
+remove_service() {
+    local service="$1"
+    if podman image exists "$service"; then
+        echo "Removing image: $service"
+        podman rmi "$service" || echo "Warning: Could not remove $service."
+    else
+        echo "Image $service does not exist, skipping."
+    fi
+}
+
+main() {
+    local cmd="${1:-}"
+    local svc="${2:-}"
+
+    case "$cmd" in
+        build|remove)
+            if [[ -n "$svc" ]]; then
+                if ! valid_service "$svc"; then
+                    echo "Error: Unknown service '$svc'"
+                    usage; exit 1
+                fi
+                "${cmd}_service" "$svc"
+            else
+                for s in "${SERVICES[@]}"; do
+                    "${cmd}_service" "$s"
+                done
+            fi
+            ;;
+        help|"")
+            usage ;;
+        *)
+            echo "Unknown command: $cmd"
+            usage; exit 1 ;;
+    esac
+}
+
+SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)"
+cd "${SCRIPT_DIR}/.."
+main "$@"

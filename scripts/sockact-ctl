@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Welche Services gesteuert werden
+SERVICES=("sockact-a.service" "sockact-b.service")
+SYSTEMCTL="systemctl"
+JOURNALCTL="journalctl"
+
+print_usage() {
+    echo "Usage: $0 {start|stop|restart|reload|status|logs|enable|disable} [service]"
+    echo
+    echo "Available services:"
+    for svc in "${SERVICES[@]}"; do
+        echo "  - $svc"
+    done
+    echo
+    echo "If [service] is omitted, the action applies to all."
+}
+
+if [ $# -lt 1 ]; then
+    print_usage
+    exit 1
+fi
+
+ACTION=$1
+TARGET=$2
+
+run_action() {
+    local svc="$1"
+    case "$ACTION" in
+    start)
+        echo "Starting $svc..."
+        $SYSTEMCTL start "$svc"
+        ;;
+    stop)
+        echo "Stopping $svc..."
+        $SYSTEMCTL stop "$svc"
+        ;;
+    restart)
+        echo "Restarting $svc..."
+        $SYSTEMCTL restart "$svc"
+        ;;
+    reload)
+        echo "Reloading $svc..."
+        $SYSTEMCTL reload "$svc"
+        ;;
+    status)
+        echo "Status of $svc:"
+        $SYSTEMCTL status "$svc" --no-pager
+        ;;
+    logs)
+        $JOURNALCTL -u "$svc"
+        ;;
+    enable)
+        echo "Enabling $svc..."
+        $SYSTEMCTL enable "$svc"
+        ;;
+    disable)
+        echo "Disabling $svc..."
+        $SYSTEMCTL disable "$svc"
+        ;;
+    *)
+        print_usage
+        exit 1
+        ;;
+    esac
+}
+
+if [ -n "$TARGET" ]; then
+    run_action "$TARGET"
+else
+    for svc in "${SERVICES[@]}"; do
+        run_action "$svc"
+    done
+fi
