@@ -1,11 +1,12 @@
+#include <sd_notify.h>
+#include <sd_socket.h>
 #include <signalhandler.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/systemd_sink.h>
 #include <spdlog/spdlog.h>
-#include <sd_notify.h>
 #include <systemd/sd-daemon.h> // für sd_booted()
 
-int main(int argc, const char** argv)
+int main(int argc, const char **argv)
 {
     (void)argc;
     (void)argv;
@@ -24,11 +25,22 @@ int main(int argc, const char** argv)
     spdlog::set_default_logger(logger);
     spdlog::set_level(spdlog::level::debug);
 
+    if (sd_booted() > 0) {
+        auto sockets = systemd_socket::getSystemdUnixSockets();
+        if (sockets.empty()) {
+            spdlog::warn("No systemd UNIX sockets found, falling back to manual bind()");
+        } else {
+            for (const auto &[fd, path] : sockets) {
+                spdlog::info("Systemd provided socket: fd={} path={}", fd, path.string());
+            }
+        }
+    }
+
     utils::CSignalHandler signalHandler({SIGTERM, SIGINT, SIGHUP});
 
     try {
         signalHandler.EnableSigsegvHandler();
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         spdlog::error("Error occurred {}", e.what());
         theEnd = true;
     }
@@ -38,7 +50,8 @@ int main(int argc, const char** argv)
     while (!theEnd) {
         const int receivedSignal = signalHandler.Sigwait();
         switch (receivedSignal) {
-        case SIGTERM: [[fallthrough]];
+        case SIGTERM:
+            [[fallthrough]];
         case SIGINT: {
             spdlog::info("Termination requested");
             systemd_notify::stopping();

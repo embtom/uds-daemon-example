@@ -9,11 +9,13 @@ set(HEADERS
     "include/list.h"
     "include/signalhandler.h"
     "include/sd_notify.h"
+    "include/sd_socket.h"
     "include/string_utils.h")
 
 set(SOURCES
     "src/signalhandler.cpp"
     "src/sd_notify.cpp"
+    "src/sd_socket.cpp"
     "src/fdset.cpp"
     "src/pipe.cpp")
 

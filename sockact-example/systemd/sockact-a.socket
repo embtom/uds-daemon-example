@@ -1,11 +1,13 @@
 [Unit]
 Description=SockAct Example UNIX domain socket
+After=local-fs.target
+Requires=local-fs.target
 
 [Socket]
 ListenStream=/run/sockact-a.sock
 SocketMode=0660
-#SocketUser=sockact
-#SocketGroup=sockact
+SocketUser=root
+SocketGroup=root
 
 # Clean up socket on stop
 RemoveOnStop=yes

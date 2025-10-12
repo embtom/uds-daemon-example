@@ -2,6 +2,9 @@
 Description=SockAct Example Service
 After=local-fs.target
 Requires=local-fs.target
+# No explicit dependency on sockact-a.socket is required:
+# systemd automatically adds the appropriate After= and Requires= relations
+# when using socket activation.
 
 [Service]
 Type=notify
