@@ -4,34 +4,70 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "[amd64] debian package build",
+            "label": "Debian package build",
             "type": "shell",
-            "options" : {
-                "cwd" : "${workspaceFolder}/sockact-example",
+            "options": {
+                "cwd": "${workspaceFolder}",
             },
-            "command": "dpkg-buildpackage -us -uc -b ${input:debianPackageVariant}",
+            "command": "make",
+            "args": [
+                "${input:debianPackageVariant}-debbuild"
+            ],
             "problemMatcher": [
                 "$gcc"
             ],
             "group": "build"
+        },
+        {
+            "label": "Cmake build",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "command": "make",
+            "args": [
+                "${input:cmakePresetVariant}"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Run ctest (active build)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cd ${command:cmake.buildDirectory} && ctest --output-on-failure --verbose --progress --no-tests=error"
+            ],
+            "options": {
+                "env": {
+                    "CTEST_OUTPUT_ON_FAILURE": "1",
+                    "CTEST_COLOR": "ON"
+                }
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "echo": true,
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true"
+            }
+        },
+        {
+            "label": "Run sockact-a",
+            "type": "shell",
+            "command": "${workspaceFolder}/sockact-example/build/amd64-Release/sockact-a/sockact-a",
+            "options": {
+                "cwd": "${workspaceFolder}/sockact-example/build/amd64-Release/sockact-a"
+            },
+            "problemMatcher": []
         }
     ],
     "inputs": [
-        {
-            "id": "target",
-            "type": "promptString",
-            "description": "Enter the target name / IP address",
-            "default": "172.16.0.1"
-        },
-        {
-            "id": "buildType",
-            "type": "pickString",
-            "description": "Select the build type",
-            "options": [
-                "Debug",
-                "Release"
-            ]
-        },
         {
             "id": "debianPackageVariant",
             "type": "pickString",
@@ -39,7 +75,20 @@
             "options": [
                 "amd64",
                 "arm64"
-            ]
+            ],
+            "default": "amd64"
+        },
+        {
+            "id": "cmakePresetVariant",
+            "type": "pickString",
+            "description": "Select the cmake preset variant",
+            "options": [
+                "amd64-Release",
+                "amd64-Debug",
+                "arm64-Release",
+                "arm64-Debug"
+            ],
+            "default": "amd64-Release"
         }
     ]
 }

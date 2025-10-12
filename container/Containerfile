@@ -1,0 +1,97 @@
+###########################################################
+# Stage 1: build-env image
+###########################################################
+FROM debian:trixie AS build-env
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+RUN apt-get update \
+ && apt-get install --yes --no-install-recommends \
+    build-essential \
+    cdbs \
+    dumb-init \
+    devscripts \
+    equivs \
+    fakeroot \
+    openssh-client \
+    gcc-aarch64-linux-gnu \
+    g++-aarch64-linux-gnu \
+    libc6-dev-arm64-cross \
+    cmake \
+    clang-format \
+    curl \
+    ninja-build \
+    nano \
+    shfmt \
+    gdb-multiarch \
+    gdb \
+    git \
+    qemu-user-static \
+    pkg-config \
+    wget \
+    unzip \
+    zsh \
+    python3-pip \
+    locales \
+ && sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+ && locale-gen \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN dpkg --add-architecture arm64 \
+ && apt-get update \
+ && for arch in amd64 arm64; do \
+      apt-get install --yes --no-install-recommends \
+        pkgconf:${arch} \
+        libsystemd-dev:${arch} \
+        libspdlog-dev:${arch} \
+        libgtest-dev:${arch}; \
+    done \
+ && rm -rf /var/lib/apt/lists/*
+
+
+RUN pip3 install --no-cache-dir --break-system-packages cmake-format
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+
+###########################################################
+# Stage 2: dev-env container
+###########################################################
+FROM build-env AS dev-env
+
+# Install code-server
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+# sanity checks
+RUN set -eux; \
+    command -v code-server; \
+    code-server --version
+
+# Install extensions from extensions.json
+COPY .vscode/extensions.json /tmp/extensions.json
+
+RUN apt-get update && apt-get install -y jq && rm -rf /var/lib/apt/lists/* \
+ && mkdir -p /root/.vscode-server/extensions \
+ && for ext in $(jq -r '.recommendations[]' /tmp/extensions.json); do \
+      echo "Installing $ext"; \
+      code-server --install-extension "$ext" --extensions-dir /root/.vscode-server/extensions || true; \
+    done \
+ && rm /tmp/extensions.json
+
+
+ARG SONARCFAMILY_VER=6.71.0.87975
+RUN mkdir -p /root/.vscode-server/extensions/sonarsource.sonarlint_ondemand-analyzers/sonar-cfamily-plugin/${SONARCFAMILY_VER}  && \
+    curl -L \
+      "https://binaries.sonarsource.com/CommercialDistribution/sonar-cfamily-plugin/sonar-cfamily-plugin-${SONARCFAMILY_VER}.jar" \
+      -o /root/.vscode-server/extensions/sonarsource.sonarlint_ondemand-analyzers/sonar-cfamily-plugin/${SONARCFAMILY_VER}/sonarcfamily.jar
+
+
+RUN ZSH="/root/.oh-my-zsh" RUNZSH=no CHSH=no \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+CMD [ "/usr/bin/zsh" ]

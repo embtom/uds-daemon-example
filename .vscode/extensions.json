@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "waderyan.gitblame",
+    "dawidd6.debian-vscode",
+    "editorconfig.editorconfig",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "sonarsource.sonarlint-vscode",
+    "mhutchie.git-graph",
+    "cheshirekow.cmake-format",
+    "foxundermoon.shell-format",
+    "hangxingliu.vscode-systemd-support"
+  ]
+}

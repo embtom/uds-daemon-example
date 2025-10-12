@@ -1,14 +1,25 @@
 {
-	// Use IntelliSense to learn about possible attributes.
-	// Hover to view descriptions of existing attributes.
-	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-	"version": "0.2.0",
-	"configurations": [
-		{   // ssh -L 6000:localhost:6000 target
-            "name": "[aarch64] mcusysfwctl",
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[amd64] sockact-a",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/arm64-linux-user-gcc-Debug/INSTALL/bin/mcusysfwctl",
+            "program": "${workspaceFolder}/sockact-example/build/amd64-Debug/sockact-a/sockact-a",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },
+        { // ssh -L 6000:localhost:6000 target
+            "name": "[arm64] sockact-a",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.buildDirectory}/sockact-a/sockact-a",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": true,
@@ -27,6 +38,32 @@
                 }
             ],
             "targetArchitecture": "arm64"
+        },
+        {
+            "name": "Debug CTest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}", // test executable path
+            "args": [], // will be filled by CMake Tools
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "Debug UnitTest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/sockact-example/build/amd64-Debug/test/unit_tests", // test executable path
+            "args": ["--gtest_filter=UdsClientTest.ReconnectAfterDisconnect"],
+            "environment": [],
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
-	]
+
+    ]
 }

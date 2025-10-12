@@ -1,29 +1,22 @@
 {
-    "name": "sockact",
-    "build": {
-        "dockerfile": "Containerfile"
-    },
-    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached",
-    "workspaceFolder": "${localWorkspaceFolder}",
+    "name": "vsc-sockact",
+    "dockerComposeFile": "../podman-compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/src",
     "containerEnv": {
         "DEVCONTAINER": "1",
         "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt"
     },
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "20"
+        }
+    },
     "customizations": {
         "vscode": {
             "extensions": [
-                "davidanson.vscode-markdownlint",
-                "eamodio.gitlens",
-                "editorconfig.editorconfig",
                 "ms-vscode.cpptools-extension-pack",
-                "ms-vscode.cmake-tools",
-                "streetsidesoftware.code-spell-checker",
-                "yzhang.markdown-all-in-one",
-                "davidanson.vscode-markdownlint",
-                "sonarsource.sonarlint-vscode",
-                "mhutchie.git-graph",
-                "cheshirekow.cmake-format",
-                "foxundermoon.shell-format"
+                "ms-vscode.cmake-tools"
             ],
             "settings": {
                 "terminal.integrated.profiles.linux": {
