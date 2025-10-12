@@ -1,0 +1,14 @@
+[Unit]
+Description=SockAct Example UNIX domain socket
+
+[Socket]
+ListenStream=/run/sockact-a.sock
+SocketMode=0660
+#SocketUser=sockact
+#SocketGroup=sockact
+
+# Clean up socket on stop
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target
