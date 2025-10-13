@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PKG_NAME="sockact-example"
+DEB_FILE=$(ls sockact-example_*_amd64.deb | head -n1)
+
+SOCKET_NAME="sockact-a.socket"
+SERVICE_NAME="sockact-a.service"
+
+echo "Checking for existing installation..."
+if dpkg -s "${PKG_NAME}" >/dev/null 2>&1; then
+    echo "Removing old version of ${PKG_NAME}..."
+    sudo systemctl stop "${SERVICE_NAME}" || true
+    sudo systemctl stop "${SOCKET_NAME}" || true
+    sudo systemctl disable "${SERVICE_NAME}" || true
+    sudo systemctl disable "${SOCKET_NAME}" || true
+    sudo apt-get remove --purge -y "${PKG_NAME}"
+fi
+
+echo "Installing new package ${DEB_FILE}..."
+sudo dpkg -i "${DEB_FILE}" || sudo apt-get install -f -y
+
+echo "Reloading systemd units..."
+sudo systemctl daemon-reload
+
+echo "Enabling and starting ${SOCKET_NAME}..."
+sudo systemctl enable --now "${SOCKET_NAME}"
+
+# Optional: start the service directly (not always needed if socket-activated)
+echo "Enabling ${SERVICE_NAME}..."
+sudo systemctl enable --now "${SERVICE_NAME}"
+
+echo "Status summary:"
+sudo systemctl status "${SOCKET_NAME}" --no-pager || true
+sudo systemctl status "${SERVICE_NAME}" --no-pager || true
+
+echo "Done"

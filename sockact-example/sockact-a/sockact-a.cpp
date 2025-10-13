@@ -25,6 +25,16 @@ int main(int argc, const char **argv)
     spdlog::set_default_logger(logger);
     spdlog::set_level(spdlog::level::debug);
 
+    utils::CSignalHandler signalHandler({SIGTERM, SIGINT, SIGHUP});
+
+
+    try {
+        signalHandler.EnableSigsegvHandler();
+    } catch (const std::exception &e) {
+        spdlog::error("Error occurred {}", e.what());
+        theEnd = true;
+    }
+
     if (sd_booted() > 0) {
         auto sockets = systemd_socket::getSystemdUnixSockets();
         if (sockets.empty()) {
@@ -36,14 +46,6 @@ int main(int argc, const char **argv)
         }
     }
 
-    utils::CSignalHandler signalHandler({SIGTERM, SIGINT, SIGHUP});
-
-    try {
-        signalHandler.EnableSigsegvHandler();
-    } catch (const std::exception &e) {
-        spdlog::error("Error occurred {}", e.what());
-        theEnd = true;
-    }
 
     spdlog::info("App start");
     systemd_notify::ready();
