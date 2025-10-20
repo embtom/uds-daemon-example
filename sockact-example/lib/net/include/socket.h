@@ -21,6 +21,7 @@ enum class ESocketMode {
 
 class Socket {
   public:
+    Socket() = default;
     explicit Socket(ESocketMode opMode)
     {
         auto [domain, type] = getDomainAndType(opMode);

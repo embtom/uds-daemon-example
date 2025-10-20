@@ -2,12 +2,16 @@
 #define SD_SOCKET_H
 
 #include <filesystem>
-#include <map>
+#include <vector>
 
-namespace fs = std::filesystem;
 namespace systemd_socket {
 
-std::map<int, fs::path> getSystemdUnixSockets() noexcept;
+struct SocketInfo {
+    int fd;
+    std::filesystem::path path;
+};
+
+std::vector<SocketInfo> getSystemdUnixSockets() noexcept;
 
 } // namespace systemd_socket
 

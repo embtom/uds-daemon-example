@@ -6,6 +6,7 @@
 #include <fdset.h>
 #include <system_error>
 #include <expected>
+#include <sd_socket.h>
 
 namespace fs = std::filesystem;
 
@@ -21,7 +22,9 @@ class UdsServerError : public std::system_error {
 
 class UdsServer {
   public:
+    UdsServer() = default;
     explicit UdsServer(const fs::path &socket_path);
+    explicit UdsServer(const systemd_socket::SocketInfo &sd_socket_info);
     ~UdsServer();
 
     UdsServer(const UdsServer &) = delete;

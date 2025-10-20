@@ -32,6 +32,19 @@ UdsServer::UdsServer(const fs::path &socketPath)
     }
 }
 
+UdsServer::UdsServer(const systemd_socket::SocketInfo &sd_socket_info)
+ : socket_(sd_socket_info.fd)
+ , socket_path_(sd_socket_info.path)
+{
+    if(!socket_.isValid()) {
+        throw UdsServerError("invalid systemd socket fd");
+    }
+
+    if (! fs::exists(socket_path_)) {
+        throw UdsServerError("invalid systemd unix domain socket");
+    }
+}
+
 UdsServer::~UdsServer()
 {
     if (!socket_path_.empty()) {
@@ -67,9 +80,7 @@ std::expected<SocketSession, std::errc> UdsServer::WaitForConnection() noexcept
     fdSet_.AddFd(socket_.getFd());
     auto finally = utils::Finally([this]() noexcept { fdSet_.RemoveFd(socket_.getFd()); });
 
-    utils::FdSetRet ret = fdSet_.Select();
-
-    if (ret == utils::FdSetRet::UNBLOCK)
+    if (utils::FdSetRet ret = fdSet_.Select(); ret == utils::FdSetRet::UNBLOCK)
         return std::unexpected(std::errc::operation_canceled);
 
     int clientFd;
@@ -83,10 +94,7 @@ std::expected<SocketSession, std::errc> UdsServer::WaitForConnection() noexcept
     return SocketSession(clientFd);
 }
 
-void UdsServer::Unblock() const noexcept
-{
-    fdSet_.UnBlock();
-}
+void UdsServer::Unblock() const noexcept { fdSet_.UnBlock(); }
 
 const Socket &UdsServer::ServerSocket() const noexcept { return socket_; }
 

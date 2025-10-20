@@ -6,7 +6,8 @@ target_link_libraries(
     sockact-a
     PRIVATE libsystemd::libsystemd
     PRIVATE spdlog::spdlog
-    PRIVATE utils)
+    PRIVATE utils
+    PRIVATE net)
 
 enable_strict_warnings(sockact-a)
 
