@@ -37,6 +37,7 @@ RUN apt-get update \
     unzip \
     zsh \
     python3-pip \
+    libcxxopts-dev \
     locales \
  && sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
  && locale-gen \
@@ -84,7 +85,7 @@ RUN apt-get update && apt-get install -y jq && rm -rf /var/lib/apt/lists/* \
  && rm /tmp/extensions.json
 
 
-ARG SONARCFAMILY_VER=6.71.0.87975
+ARG SONARCFAMILY_VER=6.73.0.90893
 RUN mkdir -p /root/.vscode-server/extensions/sonarsource.sonarlint_ondemand-analyzers/sonar-cfamily-plugin/${SONARCFAMILY_VER}  && \
     curl -L \
       "https://binaries.sonarsource.com/CommercialDistribution/sonar-cfamily-plugin/sonar-cfamily-plugin-${SONARCFAMILY_VER}.jar" \

@@ -4,29 +4,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Debian package build",
+            "label": "build",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}",
+                "cwd": "${workspaceFolder}"
             },
             "command": "make",
             "args": [
-                "${input:debianPackageVariant}-debbuild"
-            ],
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "Cmake build",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceFolder}",
-            },
-            "command": "make",
-            "args": [
-                "${input:cmakePresetVariant}"
+                "${input:buildVariant}"
             ],
             "problemMatcher": [
                 "$gcc"
@@ -54,41 +39,44 @@
                 "echo": true,
                 "focus": true,
                 "panel": "dedicated",
-                "clear": true"
+                "clear": true
             }
         },
         {
             "label": "Run sockact-a",
             "type": "shell",
-            "command": "${workspaceFolder}/sockact-example/build/amd64-Release/sockact-a/sockact-a",
+            "command": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/sockact-a/sockact-a",
             "options": {
-                "cwd": "${workspaceFolder}/sockact-example/build/amd64-Release/sockact-a"
+                "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/sockact-a"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Run cli",
+            "type": "shell",
+            "command": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/cli/sockact-cli",
+            "options": {
+                "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/cli"
+            },
+            "args": ["--socket=/run/sockact-local-a.sock"],
+            "problemMatcher": []
         }
+
     ],
     "inputs": [
         {
-            "id": "debianPackageVariant",
+            "id": "buildVariant",
             "type": "pickString",
-            "description": "Select the debian package variant",
-            "options": [
-                "amd64",
-                "arm64"
-            ],
-            "default": "amd64"
-        },
-        {
-            "id": "cmakePresetVariant",
-            "type": "pickString",
-            "description": "Select the cmake preset variant",
+            "description": "Select build variant",
             "options": [
                 "amd64-Release",
                 "amd64-Debug",
+                "amd64-debbuild",
                 "arm64-Release",
-                "arm64-Debug"
+                "arm64-Debug",
+                "arm64-debbuild"
             ],
             "default": "amd64-Release"
-        }
+        },
     ]
 }

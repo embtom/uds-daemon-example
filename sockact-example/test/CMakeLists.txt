@@ -3,6 +3,7 @@ find_package(GTest REQUIRED)
 set(TEST_SOURCES
     "test_main.cpp"
     "utils/test_fdset.cpp"
+    "utils/test_byte_util.cpp"
     "net/test_socket.cpp"
     "net/test_uds_server.cpp"
     "net/test_uds_client.cpp"

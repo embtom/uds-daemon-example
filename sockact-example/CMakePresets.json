@@ -76,5 +76,51 @@
             "name": "arm64-Debug",
             "configurePreset": "arm64-Debug"
         }
+    ],
+    "testPresets": [
+        {
+            "name": "amd64-Release",
+            "configurePreset": "amd64-Release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "amd64-Debug",
+            "configurePreset": "amd64-Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-Release",
+            "configurePreset": "arm64-Release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-Debug",
+            "configurePreset": "arm64-Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        }
     ]
 }

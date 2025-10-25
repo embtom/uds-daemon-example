@@ -1,28 +1,33 @@
 version: "4"
+
 services:
   builder:
     build:
       context: .
       dockerfile: container/Containerfile
+      target: build-env
     image: sockact-builder:latest
-    target: build-env
     volumes:
       - .:/src:Z
     working_dir: "/src"
     cap_add:
       - NET_RAW
     network_mode: host
+    environment:
+      - INSIDE_CONTAINER=1
     entrypoint: ["dumb-init", "--", "make"]
 
   devcontainer:
     build:
       context: .
       dockerfile: container/Containerfile
-    image: devcontainer:latest
-    target: dev-env
+      target: dev-env
+    image: sockact-devcontainer:latest
     volumes:
       - .:/src:Z
     cap_add:
       - NET_RAW
     network_mode: host
+    environment:
+      - INSIDE_CONTAINER=1
     entrypoint: ["dumb-init", "--", "sleep", "infinity"]

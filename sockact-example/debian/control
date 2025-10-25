@@ -8,7 +8,8 @@ Build-Depends: debhelper-compat (= 13),
                pkg-config,
                pkgconf,
                libspdlog-dev,
-               libsystemd-dev
+               libsystemd-dev,
+               libcxxopts-dev
 Build-Depends-Arch: g++-aarch64-linux-gnu
 Standards-Version: 4.6.2
 Rules-Requires-Root: no

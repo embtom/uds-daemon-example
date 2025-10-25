@@ -7,3 +7,4 @@ ConstructorInitializerIndentWidth: 1
 BreakConstructorInitializers: BeforeComma
 ColumnLimit: 100
 IndentWidth: 4
+AlwaysBreakTemplateDeclarations: Yes

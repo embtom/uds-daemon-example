@@ -100,7 +100,6 @@ SocketSession::receiveImpl(std::span<std::byte> buffer,
 {
     const int fd = socket_.getFd();
     utils::FdSetRet ret = fdSet_.Select([&fd](int readyFd) {
-        spdlog::debug("fd {} is readable", readyFd);
         if (readyFd == fd) {
             spdlog::debug("fd {} is readable", readyFd);
         } else {

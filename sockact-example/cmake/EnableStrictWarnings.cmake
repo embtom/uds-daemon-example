@@ -9,78 +9,78 @@
 #
 
 function(enable_strict_warnings target)
-    # Require modern C++ standard
+
     target_compile_features(${target} PUBLIC cxx_std_23)
 
     # Strict warnings for C++
-    target_compile_options(${target} PUBLIC
-        $<$<COMPILE_LANGUAGE:CXX>:
-            -Wall
-            -Wextra
-            -Wpedantic
-            -Wshadow
-            -Wnon-virtual-dtor
-            -Wold-style-cast
-            -Wcast-align
-            -Wunused
-            -Woverloaded-virtual
-            -Wconversion
-            -Wsign-conversion
-            -Wnull-dereference
-            -Wduplicated-cond
-            -Wduplicated-branches
-            -Wformat=2
-            -Wlogical-op
-            -Wuseless-cast
-            -Wdouble-promotion
-            -Wfloat-equal
-            -Winit-self
-            -Wmissing-include-dirs
-            -Wswitch-enum
-            -Wstrict-null-sentinel
-            -Wstrict-overflow=2
-            -Wswitch-default
-            -Wpointer-arith
-            -Wno-unknown-pragmas
-            -Werror
-            -Werror=unused-result
-        >
-    )
+    target_compile_options(
+        ${target}
+        PUBLIC $<$<COMPILE_LANGUAGE:CXX>:
+               -Wall
+               -Wextra
+               -Wpedantic
+               -Wshadow
+               -Wnon-virtual-dtor
+               -Wold-style-cast
+               -Wcast-align
+               -Wunused
+               -Woverloaded-virtual
+               -Wconversion
+               -Wsign-conversion
+               -Wnull-dereference
+               -Wduplicated-cond
+               -Wduplicated-branches
+               -Wformat=2
+               -Wlogical-op
+               -Wuseless-cast
+               -Wdouble-promotion
+               -Wfloat-equal
+               -Winit-self
+               -Wmissing-include-dirs
+               -Wswitch-enum
+               -Wstrict-null-sentinel
+               -Wstrict-overflow=2
+               -Wswitch-default
+               -Wpointer-arith
+               -Wno-unknown-pragmas
+               -Werror
+               -Werror=unused-result
+               >)
 
     # Strict warnings for C
-    target_compile_options(${target} PUBLIC
-        $<$<COMPILE_LANGUAGE:C>:
-            -Wall
-            -Wextra
-            -Wpedantic
-            -Wshadow
-            -Wpointer-arith
-            -Wcast-align
-            -Wconversion
-            -Wsign-conversion
-            -Wmissing-prototypes
-            -Wstrict-prototypes
-            -Wold-style-definition
-            -Wundef
-            -Werror
-            -Werror=unused-result
-        >
-    )
+    target_compile_options(
+        ${target}
+        PUBLIC $<$<COMPILE_LANGUAGE:C>:
+               -Wall
+               -Wextra
+               -Wpedantic
+               -Wshadow
+               -Wpointer-arith
+               -Wcast-align
+               -Wconversion
+               -Wsign-conversion
+               -Wmissing-prototypes
+               -Wstrict-prototypes
+               -Wold-style-definition
+               -Wundef
+               -Werror
+               -Werror=unused-result
+               >)
 
-    target_compile_options(${target} PUBLIC
-         $<$<CONFIG:Debug>:-Og>
-         $<$<CONFIG:Release>:-O2>
-        -fstack-protector-strong
-        -fstack-clash-protection
-        -Wformat
-        -Werror=format-security
-        -Wdate-time
-        -D_FORTIFY_SOURCE=2
-    )
+    target_compile_options(
+        ${target}
+        PUBLIC $<$<CONFIG:Debug>:-Og>
+               $<$<CONFIG:Release>:-O2>
+               -fstack-protector-strong
+               -fstack-clash-protection
+               -Wformat
+               -Werror=format-security
+               -Wdate-time
+               -D_FORTIFY_SOURCE=2)
 
-    target_link_options(${target} PUBLIC
+    target_link_options(
+        ${target}
+        PUBLIC
         -Wl,-z,relro
-        -Wl,-z,now
-    )
+        -Wl,-z,now)
 endfunction()
-

@@ -3,6 +3,5 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)"
-
-${SCRIPT_DIR}/build amd64-debbuild
+make -C "${SCRIPT_DIR}/.." amd64-debbuild
 ${SCRIPT_DIR}/install

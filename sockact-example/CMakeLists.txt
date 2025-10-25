@@ -18,10 +18,12 @@ include(EnableStrictWarnings)
 find_package(Threads REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(LibSystemd REQUIRED)
+find_package(cxxopts REQUIRED)
 
 option(ENABLE_TESTING "Build and enable tests" ON)
 
 add_subdirectory(lib)
+add_subdirectory(cli)
 add_subdirectory(sockact-a)
 
 if(ENABLE_TESTING)

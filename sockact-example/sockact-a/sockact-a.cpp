@@ -1,22 +1,64 @@
+#include <csignal>
+#include <cstdlib>
+#include <cxxopts.hpp>
+#include <iostream>
+#include <memory>
 #include <sd_notify.h>
 #include <sd_socket.h>
+#include <server_worker.h>
 #include <signalhandler.h>
-#include <uds_server.h>
-
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/systemd_sink.h>
 #include <spdlog/spdlog.h>
-
-#include <csignal>
-#include <cstdlib>
-#include <memory>
 #include <string_view>
 #include <systemd/sd-daemon.h> // for sd_booted()
+#include <uds_server.h>
 
-int main(int argc, const char **argv)
+struct CliArgs {
+    spdlog::level::level_enum log_level;
+};
+
+static CliArgs parse_arguments(int argc, const char *argv[])
 {
-    (void)argc;
-    (void)argv;
+    cxxopts::Options options("sockact-a", "Unix domain socket service");
+    options.add_options()(
+        "l,log-level", "Log level (trace, debug, info, warn, error, critical, off)",
+        cxxopts::value<std::string>()->default_value("info"))("h,help", "Print usage");
+
+    cxxopts::ParseResult result;
+    try {
+        result = options.parse(argc, argv);
+
+        if (result.count("help")) {
+            std::cout << options.help() << std::endl;
+            std::exit(EXIT_SUCCESS);
+        }
+
+    } catch (const cxxopts::exceptions::exception &ex) {
+        std::cerr << "Error parsing options: " << ex.what() << "\n\n"
+                  << options.help() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    const std::string level_str = result["log-level"].as<std::string>();
+    spdlog::level::level_enum log_level;
+
+    try {
+        log_level = spdlog::level::from_str(level_str);
+    } catch (const spdlog::spdlog_ex &ex) {
+        std::cerr << "Warning: Invalid log level '" << level_str << "' (" << ex.what()
+                  << "), falling back to 'info'\n";
+        log_level = spdlog::level::info;
+    }
+
+    CliArgs args;
+    args.log_level = log_level;
+    return args;
+}
+
+int main(int argc, const char *argv[])
+{
+    auto args = parse_arguments(argc, argv);
 
     bool theEnd = false;
 
@@ -35,7 +77,7 @@ int main(int argc, const char **argv)
         }
 
         spdlog::set_default_logger(logger);
-        spdlog::set_level(spdlog::level::debug);
+        spdlog::set_level(args.log_level);
     } catch (const std::exception &e) {
         std::fprintf(stderr, "Failed to initialize logger: %s\n", e.what());
         return EXIT_FAILURE;
@@ -81,8 +123,8 @@ int main(int argc, const char **argv)
     // Main loop
     //--------------------------------------------------------------------------
     try {
-
         spdlog::info("Service started — listening on {}", udsserver.SocketPath().string());
+        net::UdsServerWorker udsServerWorker(std::move(udsserver));
         systemd_notify::ready();
 
         while (!theEnd) {
@@ -98,7 +140,7 @@ int main(int argc, const char **argv)
             case SIGHUP:
                 spdlog::info("Reload configuration requested");
                 systemd_notify::reloading();
-                // TODO: re-read config if applicable
+                // Config could be reloaded
                 systemd_notify::ready();
                 break;
 
@@ -109,6 +151,8 @@ int main(int argc, const char **argv)
         }
 
         spdlog::info("Shutting down...");
+        udsServerWorker.Stop();
+
     } catch (const std::exception &e) {
         spdlog::critical("Unhandled exception in main loop: {}", e.what());
         return EXIT_FAILURE;
