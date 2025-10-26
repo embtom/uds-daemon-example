@@ -1,6 +1,6 @@
 VARIANT ?= amd64
 
-PKGDIR    := sockact-example
+PKGDIR    := uds-daemon-example
 BUILD_DIR := $(PKGDIR)/build
 
 PRESETS := amd64-Release amd64-Debug arm64-Release arm64-Debug

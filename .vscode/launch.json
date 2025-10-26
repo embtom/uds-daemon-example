@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "[amd64] sockact-a debug",
+            "name": "[amd64] uds-daemon debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/sockact-example/build/amd64-Debug/sockact-a/sockact-a",
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
@@ -16,10 +16,10 @@
             "externalConsole": false
         },
         {
-            "name": "[amd64] remote sockact-a debug",
+            "name": "[amd64] remote uds-daemon debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/sockact-example/build/amd64-Debug/sockact-a/sockact-a",
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/uds-daemon/uds-daemon",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
@@ -27,33 +27,33 @@
             "stopAtEntry": true,
             "externalConsole": false,
             "sourceFileMap": {
-                "/src/sockact-example": "${workspaceFolder}/sockact-example"
+                "/src/uds-daemon-example": "${workspaceFolder}/uds-daemon-example"
             }
         },
         {
-            "name": "[amd64] remote sockact-a attach",
+            "name": "[amd64] remote uds-daemon attach",
             "type": "cppdbg",
             "request": "launch",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
             "miDebuggerServerAddress": "localhost:4242",
-            "program": "/usr/bin/sockact-a",
+            "program": "/usr/bin/uds-daemon",
             "cwd": "${workspaceFolder}",
             "sourceFileMap": {
-                "/build": "${workspaceFolder}/sockact-example/build"
+                "/build": "${workspaceFolder}/uds-daemon-example/build"
             },
             "setupCommands": [
                 {
-                    "text": "dir ${workspaceFolder}/sockact-example",
+                    "text": "dir ${workspaceFolder}/uds-daemon-example",
                     "ignoreFailures": false
                 }
             ]
         },
         { // ssh -L 6000:localhost:6000 target
-            "name": "[arm64] sockact-a",
+            "name": "[arm64] uds-daemon",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${command:cmake.buildDirectory}/sockact-a/sockact-a",
+            "program": "${command:cmake.buildDirectory}/uds-daemon/uds-daemon",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": true,
@@ -90,7 +90,7 @@
             "name": "Debug UnitTest",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/sockact-example/build/amd64-Debug/test/unit_tests", // test executable path
+            "program": "${workspaceFolder}/uds-daemon-example/build/amd64-Debug/test/unit_tests", // test executable path
             "args": [
                 "--gtest_filter=UdsClientTest.ReconnectAfterDisconnect"
             ],

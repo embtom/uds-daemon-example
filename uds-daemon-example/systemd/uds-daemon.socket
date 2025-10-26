@@ -4,7 +4,7 @@ After=local-fs.target
 Requires=local-fs.target
 
 [Socket]
-ListenStream=/run/sockact-a.sock
+ListenStream=/run/uds-daemon.sock
 SocketMode=0660
 SocketUser=root
 # Current user should be member of users

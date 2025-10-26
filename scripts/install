@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PKG_NAME="sockact-example"
-DEB_FILE=$(ls sockact-example_*_amd64.deb | head -n1)
+PKG_NAME="uds-daemon-example"
+DEB_FILE=$(ls uds-daemon-example_*_amd64.deb | head -n1)
 
-SOCKET_NAME="sockact-a.socket"
-SERVICE_NAME="sockact-a.service"
+SOCKET_NAME="uds-daemon.socket"
+SERVICE_NAME="uds-daemon.service"
 
 echo "Checking for existing installation..."
 if dpkg -s "${PKG_NAME}" >/dev/null 2>&1; then

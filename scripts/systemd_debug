@@ -3,10 +3,10 @@
 
 set -euo pipefail
 
-SERVICE_NAME=${1:-sockact-a.service}   # Default systemd service
+SERVICE_NAME=${1:-uds-daemon.service}   # Default systemd service
 PORT=${2:-4242}                         # Default gdbserver port
 
-DEBUG_PKG="sockact-example-dbgsym"
+DEBUG_PKG="uds-daemon-example-dbgsym"
 
 if ! dpkg -s "$DEBUG_PKG" >/dev/null 2>&1; then
     echo "Debug package $DEBUG_PKG is not installed."

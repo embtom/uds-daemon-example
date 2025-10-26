@@ -44,11 +44,11 @@
             }
         },
         {
-            "label": "Run sockact-a",
+            "label": "Run uds-daemon",
             "type": "shell",
-            "command": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/sockact-a/sockact-a",
+            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon/uds-daemon",
             "options": {
-                "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/sockact-a"
+                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/uds-daemon"
             },
             "args": [
                 "--interactive"
@@ -61,11 +61,11 @@
             }
         },
         {
-            "label": "Run cli",
+            "label": "Run udsctl",
             "type": "shell",
-            "command": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/cli/sockact-cli",
+            "command": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl/udsctl",
             "options": {
-                "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/cli"
+                "cwd": "${workspaceFolder}/uds-daemon-example/build/amd64-${input:buildType}/udsctl"
             },
             "args": [
                 "--socket=/run/sockact-local-a.sock"

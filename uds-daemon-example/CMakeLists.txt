@@ -23,8 +23,8 @@ find_package(cxxopts REQUIRED)
 option(ENABLE_TESTING "Build and enable tests" ON)
 
 add_subdirectory(lib)
-add_subdirectory(cli)
-add_subdirectory(sockact-a)
+add_subdirectory(udsctl)
+add_subdirectory(uds-daemon)
 
 if(ENABLE_TESTING)
     include(CTest)

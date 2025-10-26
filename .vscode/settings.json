@@ -2,14 +2,14 @@
     "cmake.ctest.debugConfig": "Debug CTest",
     "cmake.useCMakePresets": "always",
     "cmake.options.statusBarVisibility": "visible",
-    "cmake.sourceDirectory": "${workspaceFolder}/sockact-example",
+    "cmake.sourceDirectory": "${workspaceFolder}/uds-daemon-example",
     "cmake.configureOnOpen": false,
     "cmake.configureOnEdit": false,
     "cmake.loadCompileCommands": false,
     "cmake.skipConfigureIfCachePresent": true,
     "cmake.parallelJobs": 0,
-    "cmake.copyCompileCommands": "${workspaceFolder}/sockact-example/build/compile_commands.json",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/sockact-example/build/compile_commands.json",
+    "cmake.copyCompileCommands": "${workspaceFolder}/uds-daemon-example/build/compile_commands.json",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/uds-daemon-example/build/compile_commands.json",
     "shellformat.path": "/usr/bin/shfmt",
     "[markdown]": {
         "editor.defaultFormatter": "yzhang.markdown-all-in-one"

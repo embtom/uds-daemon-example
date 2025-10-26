@@ -2,12 +2,12 @@
 set -euo pipefail
 
 PORT=${1:-4242}             # Default gdbserver port
-BUILD_TYPE=${2:-Debug}  
+BUILD_TYPE=${2:-Debug}
 
 TOPDIR=$(git rev-parse --show-toplevel)
-BUILD_DIR="$TOPDIR/sockact-example/build/amd64-$BUILD_TYPE/sockact-a"
+BUILD_DIR="$TOPDIR/uds-daemon-example/build/amd64-$BUILD_TYPE/uds-daemon"
 
 echo "Start gdbserver with $PORT"
-echo "Debug sockact-a from $BUILD_DIR"
+echo "Debug uds-daemon from $BUILD_DIR"
 
-sudo gdbserver --once ":$PORT" "$BUILD_DIR/sockact-a"
+sudo gdbserver --once ":$PORT" "$BUILD_DIR/uds-daemon"

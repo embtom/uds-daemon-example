@@ -1,4 +1,4 @@
-Source: sockact-example
+Source: uds-daemon-example
 Section: utils
 Priority: optional
 Maintainer: tom <t.willetal@gmail.com>
@@ -14,7 +14,7 @@ Build-Depends-Arch: g++-aarch64-linux-gnu
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 
-Package: sockact-example
+Package: uds-daemon-example
 Architecture: amd64 arm64
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Socket activation example with spdlog + systemd

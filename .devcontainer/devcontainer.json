@@ -1,5 +1,5 @@
 {
-    "name": "vsc-sockact",
+    "name": "vsc-uds-daemon-example",
     "dockerComposeFile": "../podman-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/src",

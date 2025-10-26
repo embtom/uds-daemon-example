@@ -2,13 +2,13 @@
 Description=SockAct Example Service
 After=local-fs.target
 Requires=local-fs.target
-# No explicit dependency on sockact-a.socket is required:
+# No explicit dependency on uds-daemon.socket is required:
 # systemd automatically adds the appropriate After= and Requires= relations
 # when using socket activation.
 
 [Service]
 Type=notify
-ExecStart=/usr/bin/sockact-a
+ExecStart=/usr/bin/uds-daemon
 Restart=on-failure
 ExecReload=/bin/kill -HUP $MAINPID
 

@@ -17,12 +17,12 @@ struct CliArgs {
 
 static CliArgs parse_arguments(int argc, char *argv[])
 {
-    cxxopts::Options options("sockact-cli",
+    cxxopts::Options options("sockact-udsctl",
                              "Simple UDS client for communicating with sockact service");
 
     options.add_options()(
         "s,socket", "Path to UNIX domain socket",
-        cxxopts::value<std::string>()->default_value("/run/sockact-a.sock"))(
+        cxxopts::value<std::string>()->default_value("/run/uds-daemon.sock"))(
         "l,log-level", "Log level (trace, debug, info, warn, error, critical, off)",
         cxxopts::value<std::string>()->default_value("info"))(
         "m,message", "Message to send to the server",

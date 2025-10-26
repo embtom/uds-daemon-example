@@ -21,7 +21,7 @@ struct CliArgs {
 
 static CliArgs parse_arguments(int argc, const char *argv[])
 {
-    cxxopts::Options options("sockact-a", "Unix domain socket service");
+    cxxopts::Options options("uds-daemon", "Unix domain socket service");
     auto opts = options.add_options();
     opts("l,log-level", "Log verbosity: trace | debug | info | warn | error | critical | off",
          cxxopts::value<std::string>()->default_value("info"));
@@ -76,11 +76,11 @@ int main(int argc, const char *argv[])
 
     try {
         if ((sd_booted() > 0) && (!args.interactive)) {
-            auto systemd_sink = std::make_shared<spdlog::sinks::systemd_sink_mt>("sockact-a");
-            logger = std::make_shared<spdlog::logger>("sockact-a", systemd_sink);
+            auto systemd_sink = std::make_shared<spdlog::sinks::systemd_sink_mt>("uds-daemon");
+            logger = std::make_shared<spdlog::logger>("uds-daemon", systemd_sink);
         } else {
             auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            logger = std::make_shared<spdlog::logger>("sockact-a", console_sink);
+            logger = std::make_shared<spdlog::logger>("uds-daemon", console_sink);
         }
 
         spdlog::set_default_logger(logger);

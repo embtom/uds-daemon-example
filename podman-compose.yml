@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: container/Containerfile
       target: build-env
-    image: sockact-builder:latest
+    image: uds-daemon-builder:latest
     volumes:
       - .:/src:Z
     working_dir: "/src"
@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: container/Containerfile
       target: dev-env
-    image: sockact-devcontainer:latest
+    image: uds-daemon-devcontainer:latest
     volumes:
       - .:/src:Z
     cap_add:
