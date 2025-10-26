@@ -2,20 +2,24 @@ Source: uds-daemon-example
 Section: utils
 Priority: optional
 Maintainer: tom <t.willetal@gmail.com>
-Build-Depends: debhelper-compat (= 13),
-               cmake,
-               ninja-build,
-               pkg-config,
-               pkgconf,
-               libspdlog-dev,
-               libsystemd-dev,
-               libcxxopts-dev
-Build-Depends-Arch: g++-aarch64-linux-gnu
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
+Build-Depends:
+    debhelper-compat (= 13),
+    cmake:amd64,
+    ninja-build:amd64,
+    pkg-config:amd64,
+    pkgconf [arm64 amd64],
+    libcxxopts-dev:all,
+    libspdlog-dev [arm64 amd64],
+    libsystemd-dev [arm64 amd64],
+    libgtest-dev [arm64 amd64],
+    gcc-aarch64-linux-gnu [arm64],
+    g++-aarch64-linux-gnu [arm64],
+    qemu-user-static [arm64]
 
 Package: uds-daemon-example
-Architecture: amd64 arm64
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Socket activation example with spdlog + systemd
  A small example application demonstrating socket activation using systemd

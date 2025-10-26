@@ -15,7 +15,7 @@ ifeq ($(INSIDE_CONTAINER),1)
 all: $(PRESETS)
 
 debbuild:
-	cd $(PKGDIR) && dpkg-buildpackage \
+	cd $(PKGDIR) && DEB_BUILD_OPTIONS=crossbuildcanrunhostbinaries dpkg-buildpackage \
 		--host-arch=$(VARIANT) \
 		--unsigned-source \
 		--unsigned-changes \

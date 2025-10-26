@@ -10,8 +10,6 @@ services:
     volumes:
       - .:/src:Z
     working_dir: "/src"
-    cap_add:
-      - NET_RAW
     network_mode: host
     environment:
       - INSIDE_CONTAINER=1
@@ -25,8 +23,6 @@ services:
     image: uds-daemon-devcontainer:latest
     volumes:
       - .:/src:Z
-    cap_add:
-      - NET_RAW
     network_mode: host
     environment:
       - INSIDE_CONTAINER=1
