@@ -37,6 +37,14 @@
             }
         },
         {
+            "name": "switch-relwithdebinfo",
+            "hidden": true,
+            "description": "Settings for Release with debug symbols",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "amd64-Release",
             "inherits": "base-amd64"
         },
@@ -48,6 +56,13 @@
             ]
         },
         {
+            "name": "amd64-RelWithDebInfo",
+            "inherits": [
+                "switch-relwithdebinfo",
+                "base-amd64"
+            ]
+        },
+        {
             "name": "arm64-Release",
             "inherits": "base-aarch64"
         },
@@ -55,6 +70,13 @@
             "name": "arm64-Debug",
             "inherits": [
                 "switch-debug",
+                "base-aarch64"
+            ]
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "inherits": [
+                "switch-relwithdebinfo",
                 "base-aarch64"
             ]
         }
@@ -69,12 +91,20 @@
             "configurePreset": "amd64-Debug"
         },
         {
+            "name": "amd64-RelWithDebInfo",
+            "configurePreset": "amd64-RelWithDebInfo"
+        },
+        {
             "name": "arm64-Release",
             "configurePreset": "arm64-Release"
         },
         {
             "name": "arm64-Debug",
             "configurePreset": "arm64-Debug"
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "configurePreset": "arm64-RelWithDebInfo"
         }
     ],
     "testPresets": [
@@ -101,6 +131,17 @@
             }
         },
         {
+            "name": "amd64-RelWithDebInfo",
+            "configurePreset": "amd64-RelWithDebInfo",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
             "name": "arm64-Release",
             "configurePreset": "arm64-Release",
             "output": {
@@ -114,6 +155,17 @@
         {
             "name": "arm64-Debug",
             "configurePreset": "arm64-Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "arm64-RelWithDebInfo",
+            "configurePreset": "arm64-RelWithDebInfo",
             "output": {
                 "outputOnFailure": true
             },

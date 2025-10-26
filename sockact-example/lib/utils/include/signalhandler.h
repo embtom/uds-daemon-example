@@ -1,39 +1,37 @@
 #ifndef SIGNALHANDLER_H
 #define SIGNALHANDLER_H
 
+#include <cerrno>
+#include <csignal>
 #include <initializer_list>
-#include <signal.h>
+#include <pthread.h>
 #include <stdexcept>
 #include <string>
+#include <string_view>
+#include <system_error>
+#include <unistd.h>
 
 namespace utils {
 
-class SignalHandlerException : public std::runtime_error {
+class SignalError : public std::system_error {
   public:
-    SignalHandlerException() : std::runtime_error("SignalHandlerException")
-    {
-    }
-    explicit SignalHandlerException(const std::string& msg) : std::runtime_error(msg)
+    explicit SignalError(const std::string &what, int errnum = errno)
+     : std::system_error(errnum, std::generic_category(), what)
     {
     }
 };
 
-class CSignalHandler {
+class SignalHandler {
   public:
-    explicit CSignalHandler(const std::initializer_list<int>& signals);
-    ~CSignalHandler() noexcept;
+    explicit SignalHandler(std::initializer_list<int> signals);
+    ~SignalHandler();
 
-    CSignalHandler(const CSignalHandler&) = delete;
-    CSignalHandler(CSignalHandler&&) = delete;
-    CSignalHandler& operator=(const CSignalHandler&) = delete;
-    CSignalHandler& operator=(CSignalHandler&&) = delete;
-
-    int Sigwait() const;
-    void EnableSigsegvHandler() const;
+    int wait() const;
+    static void enableSegfaultHandler();
 
   private:
-    static void signalHandler(int sig, siginfo_t* info, void* ctx);
-    sigset_t m_sigSet{};
+    static void segFaultHandler(int sig, siginfo_t *info, void *ctx);
+    sigset_t sigSet{};
 };
 
 } // namespace utils

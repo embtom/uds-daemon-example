@@ -11,7 +11,8 @@
             },
             "command": "make",
             "args": [
-                "${input:buildVariant}"
+                "${input:buildVariant}",
+                "${input:cleanBuild}"
             ],
             "problemMatcher": [
                 "$gcc"
@@ -49,7 +50,15 @@
             "options": {
                 "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/sockact-a"
             },
-            "problemMatcher": []
+            "args": [
+                "--interactive"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "sockactGroup"
+            }
         },
         {
             "label": "Run cli",
@@ -58,10 +67,16 @@
             "options": {
                 "cwd": "${workspaceFolder}/sockact-example/build/amd64-${input:buildType}/cli"
             },
-            "args": ["--socket=/run/sockact-local-a.sock"],
-            "problemMatcher": []
+            "args": [
+                "--socket=/run/sockact-local-a.sock"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "group": "sockactGroup"
+            }
         }
-
     ],
     "inputs": [
         {
@@ -77,6 +92,25 @@
                 "arm64-debbuild"
             ],
             "default": "amd64-Release"
+        },
+        {
+            "id": "cleanBuild",
+            "type": "pickString",
+            "description": "Do a clean build?",
+            "options": [
+                "",       // empty string = no clean
+                "CLEAN=1"   // pass 'clean' to make
+            ],
+            "default": ""
+        },
+        {
+            "id": "buildType",
+            "type": "pickString",
+            "description": "Select the build type",
+            "options": [
+                "Debug",
+                "Release"
+            ]
         },
     ]
 }

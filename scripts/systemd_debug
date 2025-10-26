@@ -1,0 +1,25 @@
+#!/bin/bash
+# Attach gdbserver to a running systemd service
+
+set -euo pipefail
+
+SERVICE_NAME=${1:-sockact-a.service}   # Default systemd service
+PORT=${2:-4242}                         # Default gdbserver port
+
+DEBUG_PKG="sockact-example-dbgsym"
+
+if ! dpkg -s "$DEBUG_PKG" >/dev/null 2>&1; then
+    echo "Debug package $DEBUG_PKG is not installed."
+    exit 1
+fi
+echo "Debug package $DEBUG_PKG is installed."
+
+PID=$(systemctl show -p MainPID --value "$SERVICE_NAME")
+
+if [[ -z "$PID" || "$PID" == "0" ]]; then
+    echo "Error: Service '$SERVICE_NAME' is not running."
+    exit 1
+fi
+
+echo "Attaching gdbserver to PID $PID (service: $SERVICE_NAME) on port $PORT"
+sudo gdbserver --once ":$PORT" --attach "$PID"

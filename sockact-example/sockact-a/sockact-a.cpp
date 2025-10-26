@@ -16,14 +16,18 @@
 
 struct CliArgs {
     spdlog::level::level_enum log_level;
+    bool interactive;
 };
 
 static CliArgs parse_arguments(int argc, const char *argv[])
 {
     cxxopts::Options options("sockact-a", "Unix domain socket service");
-    options.add_options()(
-        "l,log-level", "Log level (trace, debug, info, warn, error, critical, off)",
-        cxxopts::value<std::string>()->default_value("info"))("h,help", "Print usage");
+    auto opts = options.add_options();
+    opts("l,log-level", "Log verbosity: trace | debug | info | warn | error | critical | off",
+         cxxopts::value<std::string>()->default_value("info"));
+
+    opts("i,interactive", "Force interactive mode (disable systemd/daemon mode)");
+    opts("h,help", "Show help message");
 
     cxxopts::ParseResult result;
     try {
@@ -40,6 +44,7 @@ static CliArgs parse_arguments(int argc, const char *argv[])
         std::exit(EXIT_FAILURE);
     }
 
+    const bool interactive = result.count("interactive") > 0;
     const std::string level_str = result["log-level"].as<std::string>();
     spdlog::level::level_enum log_level;
 
@@ -51,8 +56,10 @@ static CliArgs parse_arguments(int argc, const char *argv[])
         log_level = spdlog::level::info;
     }
 
-    CliArgs args;
-    args.log_level = log_level;
+    CliArgs args{
+        .log_level = log_level,
+        .interactive = interactive,
+    };
     return args;
 }
 
@@ -68,7 +75,7 @@ int main(int argc, const char *argv[])
     std::shared_ptr<spdlog::logger> logger;
 
     try {
-        if (sd_booted() > 0) {
+        if ((sd_booted() > 0) && (!args.interactive)) {
             auto systemd_sink = std::make_shared<spdlog::sinks::systemd_sink_mt>("sockact-a");
             logger = std::make_shared<spdlog::logger>("sockact-a", systemd_sink);
         } else {
@@ -86,10 +93,12 @@ int main(int argc, const char *argv[])
     //--------------------------------------------------------------------------
     // Signal handler setup
     //--------------------------------------------------------------------------
-    utils::CSignalHandler signalHandler({SIGTERM, SIGINT, SIGHUP});
+    utils::SignalHandler signalHandler(args.interactive
+                                           ? std::initializer_list<int>{SIGTERM, SIGINT, SIGHUP}
+                                           : std::initializer_list<int>{SIGTERM, SIGHUP});
 
     try {
-        signalHandler.EnableSigsegvHandler();
+        signalHandler.enableSegfaultHandler();
     } catch (const std::exception &e) {
         spdlog::error("Failed to enable SIGSEGV handler: {}", e.what());
         return EXIT_FAILURE;
@@ -100,7 +109,7 @@ int main(int argc, const char *argv[])
     //--------------------------------------------------------------------------
     net::UdsServer udsserver;
     try {
-        if (sd_booted() > 0) {
+        if ((sd_booted() > 0) && (!args.interactive)) {
             auto sockets = systemd_socket::getSystemdUnixSockets();
             if (sockets.empty()) {
                 spdlog::warn("No systemd UNIX sockets found, falling back to manual bind()");
@@ -128,11 +137,11 @@ int main(int argc, const char *argv[])
         systemd_notify::ready();
 
         while (!theEnd) {
-            const int receivedSignal = signalHandler.Sigwait();
+            const int receivedSignal = signalHandler.wait();
             switch (receivedSignal) {
             case SIGTERM:
             case SIGINT:
-                spdlog::info("Termination requested");
+                spdlog::info("Termination requested {}", receivedSignal);
                 systemd_notify::stopping();
                 theEnd = true;
                 break;

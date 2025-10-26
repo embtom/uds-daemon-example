@@ -3,9 +3,9 @@
 ARCH ?= $(DEB_HOST_ARCH)
 
 ifeq ($(ARCH),amd64)
-  PRESET = amd64-Release
+  PRESET = amd64-RelWithDebInfo
 else ifeq ($(ARCH),arm64)
-  PRESET = arm64-Release
+  PRESET = arm64-RelWithDebInfo
 else
   $(error Unsupported architecture: $(ARCH))
 endif
