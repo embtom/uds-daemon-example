@@ -1,0 +1,52 @@
+name: Podman Compose Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman python3-pip
+
+      - name: Install podman-compose from PyPI
+        run: |
+          pip install --upgrade pip
+          pip install podman-compose
+
+      - name: Verify installation
+        run: |
+          podman --version
+          podman-compose version
+
+      - name: Make builder
+        run: |
+          make builder
+
+      - name: amd64 debbuild     
+        run: |  
+          make amd64-debbuild
+
+      - name: arm64 debbuild     
+        run: |  
+          make arm64-debbuild
+ 
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debian-packages
+          path: |
+            **/*.deb
+            **/*.changes
+            **/*.buildinfo
