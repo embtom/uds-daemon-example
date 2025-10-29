@@ -41,10 +41,10 @@ else
 
 $(PRESETS) amd64-debbuild arm64-debbuild debbuild:
 	@echo ">>> Running inside builder container: $@ (CLEAN=$(CLEAN))"
-	podman-compose run --rm builder \
+	podman-compose -f container/podman-compose.yml run --rm builder \
 		$@ $(if $(CLEAN),CLEAN=$(CLEAN))
 
 builder:
-	podman-compose build builder
+	podman-compose -f container/podman-compose.yml build builder
 
 endif

@@ -1,6 +1,6 @@
 {
     "name": "vsc-uds-daemon-example",
-    "dockerComposeFile": "../podman-compose.yml",
+    "dockerComposeFile": "../container/podman-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/src",
     "containerEnv": {
