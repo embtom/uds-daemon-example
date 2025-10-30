@@ -3,12 +3,12 @@ version: "4"
 services:
   builder:
     build:
-      context: .
+      context: ..
       dockerfile: container/Containerfile
       target: build-env
     image: uds-daemon-builder:latest
     volumes:
-      - .:/src:Z
+      - ..:/src:Z
     working_dir: "/src"
     network_mode: host
     environment:
@@ -17,12 +17,12 @@ services:
 
   devcontainer:
     build:
-      context: .
+      context: ..
       dockerfile: container/Containerfile
       target: dev-env
     image: uds-daemon-devcontainer:latest
     volumes:
-      - .:/src:Z
+      - ..:/src:Z
     network_mode: host
     environment:
       - INSIDE_CONTAINER=1
