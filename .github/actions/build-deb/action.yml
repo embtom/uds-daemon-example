@@ -1,0 +1,69 @@
+name: "Build Debian packages with Podman"
+description: "Builds Debian packages for amd64 and arm64"
+author: "Thomas Willetal"
+
+inputs:
+  path:
+    description: "Path to the Debian package directory (for changelog parsing)"
+    required: true
+
+outputs:
+  version:
+    description: "Parsed Debian version from changelog"
+    value: ${{ steps.changelog.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies (Podman, Python, dpkg-dev)
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y podman python3-pip dpkg-dev
+
+    - name: Install podman-compose from PyPI
+      shell: bash
+      run: |
+        pip install --upgrade pip
+        pip install podman-compose
+
+    - name: Verify Podman and podman-compose
+      shell: bash
+      run: |
+        podman --version
+        podman-compose version
+
+    - name: Prepare build environment
+      shell: bash
+      run: make builder
+
+    - name: Build amd64 package
+      shell: bash
+      run: make amd64-debbuild
+
+    - name: Build arm64 package
+      shell: bash
+      run: make arm64-debbuild
+
+    - name: Get Debian version
+      id: changelog
+      uses: ./.github/actions/get-deb-version
+      with:
+        path: ${{ inputs.path }}
+
+    - name: Show parsed version
+      shell: bash
+      run: echo "Version=${{ steps.changelog.outputs.version }}"
+
+    - name: Upload build artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: uds-daemon-example-${{ steps.changelog.outputs.version }}
+        path: |
+          **/*.deb
+          **/*.changes
+          **/*.buildinfo
