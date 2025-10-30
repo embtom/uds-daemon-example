@@ -1,0 +1,34 @@
+
+name: Manual Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install dpkg-dev
+        run: sudo apt-get update && sudo apt-get install -y dpkg-dev
+
+      - name: Get Debian version
+        id: changelog
+        uses: ./.github/actions/get-deb-version
+        with:
+          path: "uds-daemon-example"
+
+      - name: Show parsed version
+        run: echo Version=${{ steps.changelog.outputs.version }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: uds-daemon-example-${{ steps.changelog.outputs.version }}
+          path: ./release-artifacts
+
+      - name: Show downloaded files
+        run: ls -l release-artifacts
+
