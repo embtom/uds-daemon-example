@@ -1,15 +1,29 @@
-
 name: Manual Release
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Trigger CI Build workflow
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          workflow: ci-build.yml
+          ref: ${{ github.ref_name }}
+
+      - name: Wait for CI Build to finish
+        uses: peter-evans/wait-for-workflow-action@v1
+        with:
+          workflow: ci-build.yml
+          branch: ${{ github.ref_name }}
+          status: success
+          timeout_minutes: 30
 
       - name: Install dpkg-dev
         run: sudo apt-get update && sudo apt-get install -y dpkg-dev
@@ -20,12 +34,12 @@ jobs:
         with:
           path: "uds-daemon-example"
 
-      - name: Show parsed version
-        run: echo Version=${{ steps.changelog.outputs.version }}
-
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: ci-build.yml
+          branch: ${{ github.ref_name }}
+          workflow_conclusion: success
           name: uds-daemon-example-${{ steps.changelog.outputs.version }}
           path: ./release-artifacts
 
