@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
       - name: Install Podman
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman python3-pip
+          sudo apt-get install -y podman python3-pip dpkg-dev
 
       - name: Install podman-compose from PyPI
         run: |
@@ -41,11 +42,20 @@ jobs:
         run: |  
           make arm64-debbuild
  
+      - name: Get Debian version
+        id: changelog
+        uses: ./.github/actions/get-deb-version
+        with:
+          path: "uds-daemon-example"
+
+      - name: Show parsed version
+        run: echo Version=${{ steps.changelog.outputs.version }}
+
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: debian-packages
+          name: uds-daemon-example-${{ steps.changelog.outputs.version }}
           path: |
             **/*.deb
             **/*.changes
