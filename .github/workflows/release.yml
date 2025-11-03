@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Debian build
+        id: builddeb
+        uses: ./.github/actions/build-deb
+        with:
+          path: "uds-daemon-example"
+
+      - name: Show Debian version
+        run: echo "Built version is ${{ steps.builddeb.outputs.version }}"
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: uds-daemon-example-${{ steps.builddeb.outputs.version }}
+          path: ./release-artifacts
+
+      - name: Show downloaded files
+        run: ls -l release-artifacts
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.builddeb.outputs.version }}"
+          TAG="v${VERSION}"
+          gh release create "${TAG}" \
+            --title "Release ${TAG}" \
+            --notes "Automated release for version ${TAG}" \
+            ./release-artifacts/*
+
+

@@ -1,10 +1,11 @@
-name: Podman Compose Build
+name: ci-build
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,39 +15,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Podman
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y podman python3-pip
-
-      - name: Install podman-compose from PyPI
-        run: |
-          pip install --upgrade pip
-          pip install podman-compose
-
-      - name: Verify installation
-        run: |
-          podman --version
-          podman-compose version
-
-      - name: Make builder
-        run: |
-          make builder
-
-      - name: amd64 debbuild     
-        run: |  
-          make amd64-debbuild
-
-      - name: arm64 debbuild     
-        run: |  
-          make arm64-debbuild
- 
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
+      - name: Build Debian packages
+        uses: ./.github/actions/build-deb
         with:
-          name: debian-packages
-          path: |
-            **/*.deb
-            **/*.changes
-            **/*.buildinfo
+          path: "uds-daemon-example"
+
+      - name: Get Debian version
+        id: changelog
+        uses: ./.github/actions/get-deb-version
+        with:
+          path: "uds-daemon-example"
+
+      - name: Show parsed version
+        run: echo Version=${{ steps.changelog.outputs.version }}
+
+

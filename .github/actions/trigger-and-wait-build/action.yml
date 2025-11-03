@@ -1,0 +1,60 @@
+name: "Trigger and Wait for CI Build"
+description: "Triggers another workflow and waits until it completes successfully."
+author: "Thomas Willetal"
+
+inputs:
+  workflow:
+    description: "Name or ID of the workflow to trigger"
+    required: true
+  ref:
+    description: "Git ref or branch to trigger the workflow on"
+    required: true
+    default: ${{ github.ref_name }}
+  poll_interval:
+    description: "Seconds between status checks"
+    required: false
+    default: "30"
+  token:
+    description: "GitHub token or PAT for workflow dispatch"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install GitHub CLI
+      shell: bash
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y gh jq
+
+    - name: Trigger workflow and wait for completion
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+        INPUT_WORKFLOW: ${{ inputs.workflow }}
+        INPUT_REF: ${{ inputs.ref }}
+        INPUT_POLL_INTERVAL: ${{ inputs.poll_interval }}
+      run: |
+        echo "Triggering workflow '$INPUT_WORKFLOW' on ref '$INPUT_REF'..."
+        gh workflow run "$INPUT_WORKFLOW" --ref "$INPUT_REF"
+
+        echo "Waiting for the workflow to start..."
+        sleep 10
+
+        echo "Polling workflow status every $INPUT_POLL_INTERVAL seconds..."
+        while true; do
+          STATUS=$(gh run list --workflow "$INPUT_WORKFLOW" --branch "$INPUT_REF" --limit 1 --json status,conclusion -q '.[0].status')
+          CONCLUSION=$(gh run list --workflow "$INPUT_WORKFLOW" --branch "$INPUT_REF" --limit 1 --json status,conclusion -q '.[0].conclusion')
+          echo "Current status: $STATUS / $CONCLUSION"
+
+          if [[ "$STATUS" == "completed" ]]; then
+            if [[ "$CONCLUSION" == "success" ]]; then
+              echo "Workflow succeeded"
+              exit 0
+            else
+              echo "Workflow failed: $CONCLUSION"
+              exit 1
+            fi
+          fi
+          sleep "$INPUT_POLL_INTERVAL"
+        done

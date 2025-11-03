@@ -1,0 +1,30 @@
+name: "Get Debian Package Version"
+description: "Parse Debian version from a debian/changelog file"
+
+inputs:
+  path:
+    description: "Path to the folder containing debian/changelog"
+    required: false
+    default: '.'
+
+outputs:
+  version:
+    description: "Version extracted from debian/changelog"
+    value: ${{ steps.parse.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Parse Debian version
+      id: parse
+      shell: bash
+      working-directory: ${{ inputs.path }}
+      run: |
+        set -e
+        if [ ! -f debian/changelog ]; then
+          echo "error debian/changelog not found"
+          exit 1
+        fi
+        VERSION=$(dpkg-parsechangelog --show-field Version)
+        echo "Detected version: $VERSION"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"

@@ -2,4 +2,4 @@
 *.deb
 *.changes
 *.log
-!.github/workflows/*.yml
+!.github
